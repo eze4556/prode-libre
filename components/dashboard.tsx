@@ -94,25 +94,25 @@ export function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Mobile Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div className="px-4 py-3">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-lg">
+        <div className="px-3 py-3 sm:px-4">
           <div className="flex items-center justify-between">
             {/* Logo and User Info */}
-          <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                <Trophy className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-            <div>
-                <h1 className="text-lg font-bold text-slate-800">Prode Libre</h1>
-                <p className="text-sm text-slate-600">Hola, {userProfile?.displayName}</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-base sm:text-lg font-bold text-slate-800 truncate">Prode Libre</h1>
+                <p className="text-xs sm:text-sm text-slate-600 truncate">Hola, {userProfile?.displayName}</p>
               </div>
             </div>
 
-            {/* User Role Badge */}
-            <div className="flex items-center gap-2">
-              <Badge className={`${getRoleColor()} border-0 shadow-sm`}>
+            {/* User Role Badge and Menu */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Badge className={`${getRoleColor()} border-0 shadow-sm text-xs px-2 py-1 hidden xs:flex`}>
                 {getRoleIcon()}
-                <span className="ml-1 text-xs font-medium">{getRoleLabel()}</span>
+                <span className="ml-1 font-medium">{getRoleLabel()}</span>
               </Badge>
               
               {/* Mobile Menu Button */}
@@ -120,9 +120,9 @@ export function Dashboard() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2"
+                className="md:hidden p-2 h-8 w-8"
               >
-                {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
               </Button>
             </div>
           </div>
@@ -130,13 +130,13 @@ export function Dashboard() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md">
-            <div className="px-4 py-2 space-y-1">
+          <div className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md shadow-lg">
+            <div className="px-3 py-2 space-y-1 max-h-96 overflow-y-auto">
               {navigationItems.map((item) => (
                 <Button
                   key={item.id}
                   variant={activeTab === item.id ? "default" : "ghost"}
-                  className={`w-full justify-start ${
+                  className={`w-full justify-start h-12 text-sm font-medium ${
                     activeTab === item.id 
                       ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md" 
                       : "text-slate-700 hover:bg-slate-100"
@@ -146,21 +146,23 @@ export function Dashboard() {
                     setIsMenuOpen(false)
                   }}
                 >
-                  <item.icon className="w-4 h-4 mr-3" />
-                  {item.label}
+                  <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
+                  <span className="truncate">{item.label}</span>
                 </Button>
               ))}
               
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-red-600 hover:bg-red-50"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4 mr-3" />
-                Cerrar Sesión
+              <div className="border-t border-slate-200 pt-2 mt-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start h-12 text-sm font-medium text-red-600 hover:bg-red-50"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-3 flex-shrink-0" />
+                  <span className="truncate">Cerrar Sesión</span>
             </Button>
           </div>
         </div>
+          </div>
         )}
       </header>
 
@@ -197,7 +199,7 @@ export function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-3 py-4 sm:px-4 sm:py-6">
         {/* Home Tab */}
         {activeTab === "home" && (
           <div className="space-y-6">
@@ -211,70 +213,70 @@ export function Dashboard() {
                   <p className="text-slate-600">Gestiona el sistema completo de Prode Libre</p>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <CardHeader className="text-center">
-                      <CardTitle className="flex items-center justify-center gap-2 text-purple-800">
-                        <Shield className="w-6 h-6" />
+                    <CardHeader className="text-center pb-3">
+                      <CardTitle className="flex items-center justify-center gap-2 text-purple-800 text-sm sm:text-base">
+                        <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
                         Gestionar Pagos
                       </CardTitle>
-                      <CardDescription className="text-purple-700">
+                      <CardDescription className="text-purple-700 text-xs sm:text-sm">
                         Aprobar y rechazar solicitudes de upgrade
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="text-center">
+                    <CardContent className="text-center pt-0">
                       <Button
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 shadow-md"
+                        size="sm"
+                        className="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 shadow-md text-xs sm:text-sm h-9 sm:h-10"
                         onClick={() => setActiveTab("superadmin")}
                       >
-                        <Shield className="w-5 h-5 mr-2" />
+                        <Shield className="w-4 h-4 mr-2" />
                         Acceder al Panel
                       </Button>
                     </CardContent>
                   </Card>
 
                   <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <CardHeader className="text-center">
-                      <CardTitle className="flex items-center justify-center gap-2 text-blue-800">
-                        <Users className="w-6 h-6" />
+                    <CardHeader className="text-center pb-3">
+                      <CardTitle className="flex items-center justify-center gap-2 text-blue-800 text-sm sm:text-base">
+                        <Users className="w-5 h-5 sm:w-6 sm:h-6" />
                         Ver Grupos
                       </CardTitle>
-                      <CardDescription className="text-blue-700">
+                      <CardDescription className="text-blue-700 text-xs sm:text-sm">
                         Explorar todos los grupos del sistema
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="text-center">
+                    <CardContent className="text-center pt-0">
                       <Button
-                        size="lg"
+                        size="sm"
                         variant="outline"
-                        className="w-full border-blue-300 text-blue-700 hover:bg-blue-100 shadow-sm"
+                        className="w-full border-blue-300 text-blue-700 hover:bg-blue-100 shadow-sm text-xs sm:text-sm h-9 sm:h-10"
                         onClick={() => setActiveTab("groups")}
                       >
-                        <Users className="w-5 h-5 mr-2" />
+                        <Users className="w-4 h-4 mr-2" />
                         Ver Grupos
                       </Button>
                     </CardContent>
                   </Card>
 
                   <Card className="border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100">
-                    <CardHeader className="text-center">
-                      <CardTitle className="flex items-center justify-center gap-2 text-gray-600">
-                        <Settings className="w-6 h-6" />
+                    <CardHeader className="text-center pb-3">
+                      <CardTitle className="flex items-center justify-center gap-2 text-gray-600 text-sm sm:text-base">
+                        <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
                         Panel Admin
                       </CardTitle>
-                      <CardDescription className="text-gray-500">
+                      <CardDescription className="text-gray-500 text-xs sm:text-sm">
                         Solo para administradores de grupos
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="text-center">
+                    <CardContent className="text-center pt-0">
                       <Button
-                        size="lg"
+                        size="sm"
                         variant="outline"
-                        className="w-full border-gray-300 text-gray-500 cursor-not-allowed"
+                        className="w-full border-gray-300 text-gray-500 cursor-not-allowed text-xs sm:text-sm h-9 sm:h-10"
                         disabled
                       >
-                        <Settings className="w-5 h-5 mr-2" />
+                        <Settings className="w-4 h-4 mr-2" />
                         No Disponible
                       </Button>
                     </CardContent>
@@ -291,92 +293,92 @@ export function Dashboard() {
                   <p className="text-slate-600">Gestiona tus grupos y partidos</p>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <CardHeader className="text-center">
-                      <CardTitle className="flex items-center justify-center gap-2 text-blue-800">
-                        <Settings className="w-6 h-6" />
+                    <CardHeader className="text-center pb-3">
+                      <CardTitle className="flex items-center justify-center gap-2 text-blue-800 text-sm sm:text-base">
+                        <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
                         Administrar Grupos
                       </CardTitle>
-                      <CardDescription className="text-blue-700">
+                      <CardDescription className="text-blue-700 text-xs sm:text-sm">
                         Crear grupos, partidos y cargar resultados
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="text-center">
+                    <CardContent className="text-center pt-0">
                       <Button
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-md"
+                        size="sm"
+                        className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-md text-xs sm:text-sm h-9 sm:h-10"
                         onClick={() => setActiveTab("admin")}
                       >
-                        <Settings className="w-5 h-5 mr-2" />
+                        <Settings className="w-4 h-4 mr-2" />
                         Acceder al Panel
                       </Button>
                     </CardContent>
                   </Card>
 
                   <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <CardHeader className="text-center">
-                      <CardTitle className="flex items-center justify-center gap-2 text-purple-800">
-                        <Users className="w-6 h-6" />
+                    <CardHeader className="text-center pb-3">
+                      <CardTitle className="flex items-center justify-center gap-2 text-purple-800 text-sm sm:text-base">
+                        <Users className="w-5 h-5 sm:w-6 sm:h-6" />
                         Participantes
                       </CardTitle>
-                      <CardDescription className="text-purple-700">
+                      <CardDescription className="text-purple-700 text-xs sm:text-sm">
                         Ver puntuaciones y perfiles de participantes
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="text-center">
+                    <CardContent className="text-center pt-0">
                       <Button
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 shadow-md"
+                        size="sm"
+                        className="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 shadow-md text-xs sm:text-sm h-9 sm:h-10"
                         onClick={() => setActiveTab("participants")}
                       >
-                        <Users className="w-5 h-5 mr-2" />
+                        <Users className="w-4 h-4 mr-2" />
                         Ver Participantes
                       </Button>
                     </CardContent>
                   </Card>
 
              <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-               <CardHeader className="text-center">
-                 <CardTitle className="flex items-center justify-center gap-2 text-green-800">
-                   <Trophy className="w-6 h-6" />
+               <CardHeader className="text-center pb-3">
+                 <CardTitle className="flex items-center justify-center gap-2 text-green-800 text-sm sm:text-base">
+                   <Trophy className="w-5 h-5 sm:w-6 sm:h-6" />
                    Mis Grupos
                  </CardTitle>
-                 <CardDescription className="text-green-700">
+                 <CardDescription className="text-green-700 text-xs sm:text-sm">
                    Ver y gestionar tus grupos creados
                  </CardDescription>
                </CardHeader>
-               <CardContent className="text-center">
+               <CardContent className="text-center pt-0">
                  <Button
-                   size="lg"
+                   size="sm"
                    variant="outline"
-                   className="w-full border-green-300 text-green-700 hover:bg-green-100 shadow-sm"
+                   className="w-full border-green-300 text-green-700 hover:bg-green-100 shadow-sm text-xs sm:text-sm h-9 sm:h-10"
                    onClick={() => setActiveTab("groups")}
                  >
-                   <Trophy className="w-5 h-5 mr-2" />
+                   <Trophy className="w-4 h-4 mr-2" />
                    Ver Grupos
                  </Button>
                </CardContent>
              </Card>
 
              <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-               <CardHeader className="text-center">
-                 <CardTitle className="flex items-center justify-center gap-2 text-orange-800">
-                   <Target className="w-6 h-6" />
+               <CardHeader className="text-center pb-3">
+                 <CardTitle className="flex items-center justify-center gap-2 text-orange-800 text-sm sm:text-base">
+                   <Target className="w-5 h-5 sm:w-6 sm:h-6" />
                    Demo Equipos
                  </CardTitle>
-                 <CardDescription className="text-orange-700">
+                 <CardDescription className="text-orange-700 text-xs sm:text-sm">
                    Probar búsqueda de equipos con Football API
                  </CardDescription>
                </CardHeader>
-               <CardContent className="text-center">
+               <CardContent className="text-center pt-0">
                  <Button
-                   size="lg"
+                   size="sm"
                    variant="outline"
-                   className="w-full border-orange-300 text-orange-700 hover:bg-orange-100 shadow-sm"
+                   className="w-full border-orange-300 text-orange-700 hover:bg-orange-100 shadow-sm text-xs sm:text-sm h-9 sm:h-10"
                    onClick={() => setActiveTab("team-demo")}
                  >
-                   <Target className="w-5 h-5 mr-2" />
+                   <Target className="w-4 h-4 mr-2" />
                    Probar Demo
                  </Button>
                </CardContent>
@@ -384,25 +386,25 @@ export function Dashboard() {
                 </div>
               </div>
             ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {/* Mis Grupos */}
                 <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-slate-200 bg-white">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <Users className="w-5 h-5 text-blue-500" />
+                <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-sm sm:text-base">
+                      <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                     Mis Grupos
                   </CardTitle>
-                    <CardDescription className="text-slate-600">Grupos en los que participas</CardDescription>
+                    <CardDescription className="text-slate-600 text-xs sm:text-sm">Grupos en los que participas</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Users className="w-8 h-8 text-blue-600" />
+                <CardContent className="pt-0">
+                  <div className="text-center py-4 sm:py-6">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <Users className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                       </div>
-                      <p className="text-slate-600 mb-4">Gestiona tus grupos</p>
+                      <p className="text-slate-600 mb-3 sm:mb-4 text-xs sm:text-sm">Gestiona tus grupos</p>
                       <Button 
                         size="sm" 
-                        className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-md"
+                        className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-md text-xs sm:text-sm h-8 sm:h-9"
                         onClick={() => setActiveTab("groups")}
                       >
                       Ver Grupos
@@ -413,22 +415,22 @@ export function Dashboard() {
 
               {/* Mis Pronósticos */}
                 <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-slate-200 bg-white">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <Target className="w-5 h-5 text-green-500" />
+                <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-sm sm:text-base">
+                      <Target className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     Mis Pronósticos
                   </CardTitle>
-                    <CardDescription className="text-slate-600">Realiza tus predicciones</CardDescription>
+                    <CardDescription className="text-slate-600 text-xs sm:text-sm">Realiza tus predicciones</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Target className="w-8 h-8 text-green-600" />
+                <CardContent className="pt-0">
+                  <div className="text-center py-4 sm:py-6">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <Target className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                   </div>
-                      <p className="text-slate-600 mb-4">Haz tus pronósticos</p>
+                      <p className="text-slate-600 mb-3 sm:mb-4 text-xs sm:text-sm">Haz tus pronósticos</p>
                       <Button 
                         size="sm" 
-                        className="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 shadow-md"
+                        className="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 shadow-md text-xs sm:text-sm h-8 sm:h-9"
                         onClick={() => setActiveTab("predictions")}
                       >
                         Ver Pronósticos
@@ -439,22 +441,22 @@ export function Dashboard() {
 
                 {/* Upgrade (solo para participantes) */}
                 <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-slate-200 bg-white">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <Crown className="w-5 h-5 text-yellow-500" />
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-sm sm:text-base">
+                      <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
                       Upgrade a Admin
                     </CardTitle>
-                    <CardDescription className="text-slate-600">Conviértete en administrador</CardDescription>
+                    <CardDescription className="text-slate-600 text-xs sm:text-sm">Conviértete en administrador</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8">
-                      <div className="w-16 h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Crown className="w-8 h-8 text-yellow-600" />
+                  <CardContent className="pt-0">
+                    <div className="text-center py-4 sm:py-6">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" />
                       </div>
-                      <p className="text-slate-600 mb-4">Crea tus propios grupos</p>
+                      <p className="text-slate-600 mb-3 sm:mb-4 text-xs sm:text-sm">Crea tus propios grupos</p>
                       <Button
                         size="sm" 
-                        className="bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 shadow-md"
+                        className="bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 shadow-md text-xs sm:text-sm h-8 sm:h-9"
                         onClick={() => setActiveTab("upgrade")}
                       >
                         Upgrade

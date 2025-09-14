@@ -379,9 +379,9 @@ export function AdminPanel({ onNavigateToGroups }: AdminPanelProps = {}) {
             <p className="text-muted-foreground mb-4">
               Para crear partidos, primero necesitas crear un grupo de pronósticos
             </p>
-            <Button onClick={() => onNavigateToGroups ? onNavigateToGroups() : window.location.href = '#groups'}>
+            <Button onClick={() => onNavigateToGroups ? onNavigateToGroups() : window.location.href = '#groups'} className="h-9 sm:h-10">
               <Plus className="w-4 h-4 mr-2" />
-              Crear Grupo
+              <span className="text-sm sm:text-base">Crear Grupo</span>
             </Button>
           </CardContent>
         </Card>
@@ -390,38 +390,38 @@ export function AdminPanel({ onNavigateToGroups }: AdminPanelProps = {}) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Mis Grupos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Mis Grupos</CardTitle>
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{adminGroups.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{adminGroups.length}</div>
             <p className="text-xs text-muted-foreground">Grupos administrados</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Partidos Activos</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Partidos Activos</CardTitle>
+            <Target className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{upcomingMatches.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{upcomingMatches.length}</div>
             <p className="text-xs text-muted-foreground">Próximos partidos</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Partidos Finalizados</CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Partidos Finalizados</CardTitle>
+            <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{finishedMatches.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{finishedMatches.length}</div>
             <p className="text-xs text-muted-foreground">Resultados cargados</p>
           </CardContent>
         </Card>
@@ -429,48 +429,51 @@ export function AdminPanel({ onNavigateToGroups }: AdminPanelProps = {}) {
 
       {/* Admin Groups Management */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
             Mis Grupos Administrados
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Gestiona los grupos que has creado
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           {adminGroups.length === 0 ? (
-            <div className="text-center py-8">
-              <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No tienes grupos creados</p>
+            <div className="text-center py-6 sm:py-8">
+              <Users className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+              <p className="text-sm sm:text-base text-muted-foreground">No tienes grupos creados</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {adminGroups.map((group) => (
-                <div key={group.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{group.name}</h3>
-                    <p className="text-sm text-muted-foreground">{group.description}</p>
-                    <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                <div key={group.id} className="flex items-center justify-between p-3 sm:p-4 border rounded-lg">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm sm:text-base truncate">{group.name}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground truncate">{group.description}</p>
+                    <div className="flex items-center gap-3 sm:gap-4 mt-1 sm:mt-2 text-xs sm:text-sm text-muted-foreground">
                       <span>👥 {group.participants.length} participantes</span>
                       <span>🔑 Código: {group.joinCode}</span>
                       <span>📅 Creado: {new Date(group.createdAt).toLocaleDateString('es-ES')}</span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1 sm:gap-2 ml-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => navigator.clipboard.writeText(group.joinCode)}
+                      className="h-7 sm:h-8 px-2 sm:px-3"
                     >
-                      📋 Copiar Código
+                      <span className="hidden sm:inline">📋 Copiar Código</span>
+                      <span className="sm:hidden">📋</span>
                     </Button>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDeleteGroup(group)}
+                      className="h-7 sm:h-8 px-2 sm:px-3"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
                   </div>
                 </div>
@@ -481,24 +484,24 @@ export function AdminPanel({ onNavigateToGroups }: AdminPanelProps = {}) {
       </Card>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <Dialog open={createMatchOpen} onOpenChange={setCreateMatchOpen}>
           <DialogTrigger asChild>
-            <Button className="flex-1">
+            <Button className="flex-1 h-10 sm:h-11">
               <Plus className="w-4 h-4 mr-2" />
-              Crear Partido
+              <span className="text-sm sm:text-base">Crear Partido</span>
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle>Crear Nuevo Partido</DialogTitle>
-              <DialogDescription>Agrega un partido a uno de tus grupos</DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">Crear Nuevo Partido</DialogTitle>
+              <DialogDescription className="text-sm sm:text-base">Agrega un partido a uno de tus grupos</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleCreateMatch} className="space-y-4">
+            <form onSubmit={handleCreateMatch} className="space-y-3 sm:space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="group">Grupo</Label>
+                <Label htmlFor="group" className="text-sm sm:text-base">Grupo</Label>
                 <Select value={selectedGroupId} onValueChange={setSelectedGroupId} required>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10">
                     <SelectValue placeholder="Selecciona un grupo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -534,31 +537,33 @@ export function AdminPanel({ onNavigateToGroups }: AdminPanelProps = {}) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="matchDate">Fecha</Label>
+                  <Label htmlFor="matchDate" className="text-sm sm:text-base">Fecha</Label>
                   <Input
                     id="matchDate"
                     type="date"
                     value={matchDate}
                     onChange={(e) => setMatchDate(e.target.value)}
                     required
+                    className="h-9 sm:h-10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="matchTime">Hora</Label>
+                  <Label htmlFor="matchTime" className="text-sm sm:text-base">Hora</Label>
                   <Input
                     id="matchTime"
                     type="time"
                     value={matchTime}
                     onChange={(e) => setMatchTime(e.target.value)}
                     required
+                    className="h-9 sm:h-10"
                   />
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={submitting}>
-                {submitting ? "Creando..." : "Crear Partido"}
+              <Button type="submit" className="w-full h-9 sm:h-10" disabled={submitting}>
+                <span className="text-sm sm:text-base">{submitting ? "Creando..." : "Crear Partido"}</span>
               </Button>
             </form>
           </DialogContent>

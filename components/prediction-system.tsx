@@ -187,12 +187,12 @@ export function PredictionSystem() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col gap-3 sm:gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Mis Pronósticos</h2>
-          <p className="text-slate-600">Realiza tus predicciones para los próximos partidos</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Mis Pronósticos</h2>
+          <p className="text-sm sm:text-base text-slate-600">Realiza tus predicciones para los próximos partidos</p>
         </div>
         
         <div className="flex gap-2">
@@ -200,45 +200,46 @@ export function PredictionSystem() {
             variant="outline"
             size="sm"
             onClick={() => setShowResults(!showResults)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-xs sm:text-sm h-8 sm:h-9"
           >
-            {showResults ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            {showResults ? "Ocultar Resultados" : "Ver Resultados"}
+            {showResults ? <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" /> : <Eye className="w-3 h-3 sm:w-4 sm:h-4" />}
+            <span className="hidden xs:inline">{showResults ? "Ocultar Resultados" : "Ver Resultados"}</span>
+            <span className="xs:hidden">{showResults ? "Ocultar" : "Ver"}</span>
           </Button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Grupos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Grupos</CardTitle>
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{groups.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{groups.length}</div>
             <p className="text-xs text-muted-foreground">Grupos activos</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Próximos</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Próximos</CardTitle>
+            <Target className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{upcomingMatches.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{upcomingMatches.length}</div>
             <p className="text-xs text-muted-foreground">Partidos por jugar</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Finalizados</CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Finalizados</CardTitle>
+            <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{finishedMatches.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{finishedMatches.length}</div>
             <p className="text-xs text-muted-foreground">Partidos jugados</p>
           </CardContent>
         </Card>
@@ -246,49 +247,49 @@ export function PredictionSystem() {
 
       {/* Personal Stats */}
       {finishedMatches.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-slate-800">Mis Estadísticas</h3>
-          <div className="grid gap-4 md:grid-cols-4">
+        <div className="space-y-3 sm:space-y-4">
+          <h3 className="text-base sm:text-lg font-semibold text-slate-800">Mis Estadísticas</h3>
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-blue-800">Puntos Totales</CardTitle>
-                <Trophy className="h-4 w-4 text-blue-600" />
+                <CardTitle className="text-xs sm:text-sm font-medium text-blue-800">Puntos Totales</CardTitle>
+                <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-700">{calculatePersonalStats().totalPoints}</div>
+                <div className="text-lg sm:text-2xl font-bold text-blue-700">{calculatePersonalStats().totalPoints}</div>
                 <p className="text-xs text-blue-600">Puntos acumulados</p>
               </CardContent>
             </Card>
 
             <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-green-800">Aciertos Exactos</CardTitle>
-                <Target className="h-4 w-4 text-green-600" />
+                <CardTitle className="text-xs sm:text-sm font-medium text-green-800">Aciertos Exactos</CardTitle>
+                <Target className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-700">{calculatePersonalStats().exactScores}</div>
+                <div className="text-lg sm:text-2xl font-bold text-green-700">{calculatePersonalStats().exactScores}</div>
                 <p className="text-xs text-green-600">Resultado + goles</p>
               </CardContent>
             </Card>
 
             <Card className="border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-yellow-800">Aciertos Parciales</CardTitle>
-                <CheckCircle className="h-4 w-4 text-yellow-600" />
+                <CardTitle className="text-xs sm:text-sm font-medium text-yellow-800">Aciertos Parciales</CardTitle>
+                <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-yellow-700">{calculatePersonalStats().partialScores}</div>
+                <div className="text-lg sm:text-2xl font-bold text-yellow-700">{calculatePersonalStats().partialScores}</div>
                 <p className="text-xs text-yellow-600">Solo resultado</p>
               </CardContent>
             </Card>
 
             <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-purple-800">Promedio</CardTitle>
-                <Trophy className="h-4 w-4 text-purple-600" />
+                <CardTitle className="text-xs sm:text-sm font-medium text-purple-800">Promedio</CardTitle>
+                <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-purple-700">{calculatePersonalStats().averagePoints}</div>
+                <div className="text-lg sm:text-2xl font-bold text-purple-700">{calculatePersonalStats().averagePoints}</div>
                 <p className="text-xs text-purple-600">Puntos por partido</p>
               </CardContent>
             </Card>
@@ -298,9 +299,9 @@ export function PredictionSystem() {
 
       {/* Group Rankings */}
       {groups.length > 0 && finishedMatches.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-slate-800">Ranking por Grupo</h3>
-          <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
+          <h3 className="text-base sm:text-lg font-semibold text-slate-800">Ranking por Grupo</h3>
+          <div className="space-y-3 sm:space-y-4">
             {groups.map(group => {
               const groupMatches = matches.filter(match => match.groupId === group.id)
               const finishedGroupMatches = groupMatches.filter(match => match.isFinished)
@@ -316,21 +317,21 @@ export function PredictionSystem() {
 
               return (
                 <Card key={group.id}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Trophy className="w-5 h-5 text-yellow-500" />
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                      <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
                       {group.name}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-xs sm:text-sm">
                       {participantStats.length} participantes • {finishedGroupMatches.length} partidos finalizados
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-0">
                     <div className="space-y-2">
                       {participantStats.slice(0, 5).map((participant, index) => (
-                        <div key={participant.userId} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                        <div key={participant.userId} className="flex items-center justify-between p-2 sm:p-3 bg-slate-50 rounded-lg">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm ${
                               index === 0 ? "bg-gradient-to-r from-yellow-400 to-yellow-600" :
                               index === 1 ? "bg-gradient-to-r from-gray-300 to-gray-500" :
                               index === 2 ? "bg-gradient-to-r from-orange-400 to-orange-600" :
@@ -338,19 +339,19 @@ export function PredictionSystem() {
                             }`}>
                               {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
                             </div>
-                            <div>
-                              <p className="font-medium text-slate-800">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-slate-800 text-sm sm:text-base truncate">
                                 {participant.userName}
                                 {participant.userId === userProfile?.uid && " (Tú)"}
                               </p>
-                              <p className="text-sm text-slate-600">
+                              <p className="text-xs sm:text-sm text-slate-600">
                                 {participant.stats.totalPredictions} pronósticos • Promedio: {participant.stats.averagePoints} pts
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl font-bold text-slate-800">{participant.stats.totalPoints}</div>
-                            <div className="text-sm text-slate-600">puntos</div>
+                            <div className="text-lg sm:text-xl font-bold text-slate-800">{participant.stats.totalPoints}</div>
+                            <div className="text-xs sm:text-sm text-slate-600">puntos</div>
                           </div>
                         </div>
                       ))}
@@ -370,18 +371,18 @@ export function PredictionSystem() {
 
       {/* Tabs */}
       <Tabs defaultValue="upcoming" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upcoming">Próximos Partidos</TabsTrigger>
-          <TabsTrigger value="finished">Partidos Finalizados</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10">
+          <TabsTrigger value="upcoming" className="text-xs sm:text-sm">Próximos</TabsTrigger>
+          <TabsTrigger value="finished" className="text-xs sm:text-sm">Finalizados</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="upcoming" className="space-y-4">
+        <TabsContent value="upcoming" className="space-y-3 sm:space-y-4">
           {upcomingMatches.length === 0 ? (
             <Card>
-              <CardContent className="text-center py-12">
-                <Target className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No hay partidos próximos</h3>
-                <p className="text-muted-foreground">Los administradores aún no han creado partidos</p>
+              <CardContent className="text-center py-8 sm:py-12">
+                <Target className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold mb-2">No hay partidos próximos</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">Los administradores aún no han creado partidos</p>
               </CardContent>
             </Card>
           ) : (
@@ -399,13 +400,13 @@ export function PredictionSystem() {
           )}
         </TabsContent>
 
-        <TabsContent value="finished" className="space-y-6">
+        <TabsContent value="finished" className="space-y-4 sm:space-y-6">
           {finishedMatches.length === 0 ? (
             <Card>
-              <CardContent className="text-center py-12">
-                <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No hay partidos finalizados</h3>
-                <p className="text-muted-foreground">Los resultados aparecerán aquí una vez que se carguen</p>
+              <CardContent className="text-center py-8 sm:py-12">
+                <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold mb-2">No hay partidos finalizados</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">Los resultados aparecerán aquí una vez que se carguen</p>
               </CardContent>
             </Card>
           ) : (
@@ -432,8 +433,8 @@ export function PredictionSystem() {
                   <div className="space-y-3 pl-4 border-l-2 border-slate-200">
                     {groupFinishedMatches.map((match) => (
                       <div key={match.id} className="relative">
-                        <MatchCard
-                          match={match}
+              <MatchCard
+                match={match}
                           userProfile={userProfile}
                           onSubmit={handleSubmitPrediction}
                           submitting={submitting === match.id}
@@ -557,7 +558,7 @@ function MatchCard({ match, userProfile, onSubmit, submitting, showResults, getG
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent>
         {showResults && match.isFinished && (
           <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200">
@@ -748,17 +749,17 @@ function MatchCard({ match, userProfile, onSubmit, submitting, showResults, getG
                     </div>
                     <div>
                       <Label htmlFor={`awayFreeKicks-${match.id}`} className="text-orange-700">Visitante</Label>
-                      <Input
+                    <Input
                         id={`awayFreeKicks-${match.id}`}
-                        type="number"
-                        min="0"
+                      type="number"
+                      min="0"
                         value={predictionStats.awayFreeKicks || 0}
                         onChange={(e) => setPredictionStats(prev => ({ ...prev, awayFreeKicks: parseInt(e.target.value) || 0 }))}
                         className="mt-1"
                       />
                     </div>
                   </div>
-                </div>
+                  </div>
 
                 {/* Tarjetas Amarillas */}
                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -787,7 +788,7 @@ function MatchCard({ match, userProfile, onSubmit, submitting, showResults, getG
                       />
                     </div>
                   </div>
-                </div>
+                  </div>
 
                 {/* Tarjetas Rojas */}
                 <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -806,10 +807,10 @@ function MatchCard({ match, userProfile, onSubmit, submitting, showResults, getG
                     </div>
                     <div>
                       <Label htmlFor={`awayRedCards-${match.id}`} className="text-red-700">Visitante</Label>
-                      <Input
+                    <Input
                         id={`awayRedCards-${match.id}`}
-                        type="number"
-                        min="0"
+                      type="number"
+                      min="0"
                         value={predictionStats.awayRedCards || 0}
                         onChange={(e) => setPredictionStats(prev => ({ ...prev, awayRedCards: parseInt(e.target.value) || 0 }))}
                         className="mt-1"

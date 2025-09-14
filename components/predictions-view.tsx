@@ -94,46 +94,46 @@ export function PredictionsView() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col gap-3 sm:gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Pronósticos del Grupo</h2>
-          <p className="text-slate-600">Ve los pronósticos de otros participantes</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Pronósticos del Grupo</h2>
+          <p className="text-sm sm:text-base text-slate-600">Ve los pronósticos de otros participantes</p>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Grupos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Grupos</CardTitle>
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{groups.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{groups.length}</div>
             <p className="text-xs text-muted-foreground">Grupos activos</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Próximos</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Próximos</CardTitle>
+            <Target className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{upcomingMatches.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{upcomingMatches.length}</div>
             <p className="text-xs text-muted-foreground">Partidos por jugar</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Finalizados</CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Finalizados</CardTitle>
+            <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{finishedMatches.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{finishedMatches.length}</div>
             <p className="text-xs text-muted-foreground">Partidos jugados</p>
           </CardContent>
         </Card>
@@ -141,18 +141,18 @@ export function PredictionsView() {
 
       {/* Tabs */}
       <Tabs defaultValue="upcoming" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upcoming">Próximos Partidos</TabsTrigger>
-          <TabsTrigger value="finished">Partidos Finalizados</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10">
+          <TabsTrigger value="upcoming" className="text-xs sm:text-sm">Próximos</TabsTrigger>
+          <TabsTrigger value="finished" className="text-xs sm:text-sm">Finalizados</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="upcoming" className="space-y-4">
+        <TabsContent value="upcoming" className="space-y-3 sm:space-y-4">
           {upcomingMatches.length === 0 ? (
             <Card>
-              <CardContent className="text-center py-12">
-                <Target className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No hay partidos próximos</h3>
-                <p className="text-muted-foreground">Los administradores aún no han creado partidos</p>
+              <CardContent className="text-center py-8 sm:py-12">
+                <Target className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold mb-2">No hay partidos próximos</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">Los administradores aún no han creado partidos</p>
               </CardContent>
             </Card>
           ) : (
@@ -169,13 +169,13 @@ export function PredictionsView() {
           )}
         </TabsContent>
 
-        <TabsContent value="finished" className="space-y-6">
+        <TabsContent value="finished" className="space-y-4 sm:space-y-6">
           {finishedMatches.length === 0 ? (
             <Card>
-              <CardContent className="text-center py-12">
-                <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No hay partidos finalizados</h3>
-                <p className="text-muted-foreground">Los resultados aparecerán aquí una vez que se carguen</p>
+              <CardContent className="text-center py-8 sm:py-12">
+                <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold mb-2">No hay partidos finalizados</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">Los resultados aparecerán aquí una vez que se carguen</p>
               </CardContent>
             </Card>
           ) : (
@@ -186,20 +186,20 @@ export function PredictionsView() {
               if (groupFinishedMatches.length === 0) return null
               
               return (
-                <div key={group.id} className="space-y-4">
+                <div key={group.id} className="space-y-3 sm:space-y-4">
                   {/* Header del grupo */}
-                  <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-slate-100 to-slate-200 rounded-lg border border-slate-300">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
-                      <Trophy className="w-5 h-5 text-white" />
+                  <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-slate-100 to-slate-200 rounded-lg border border-slate-300">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                      <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-800">{group.name}</h3>
-                      <p className="text-sm text-slate-600">{groupFinishedMatches.length} partido{groupFinishedMatches.length !== 1 ? 's' : ''} finalizado{groupFinishedMatches.length !== 1 ? 's' : ''}</p>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base sm:text-lg font-semibold text-slate-800 truncate">{group.name}</h3>
+                      <p className="text-xs sm:text-sm text-slate-600">{groupFinishedMatches.length} partido{groupFinishedMatches.length !== 1 ? 's' : ''} finalizado{groupFinishedMatches.length !== 1 ? 's' : ''}</p>
                     </div>
                   </div>
                   
                   {/* Partidos del grupo */}
-                  <div className="space-y-3 pl-4 border-l-2 border-slate-200">
+                  <div className="space-y-2 sm:space-y-3 pl-3 sm:pl-4 border-l-2 border-slate-200">
                     {groupFinishedMatches.map((match) => (
                       <div key={match.id} className="relative">
                         <MatchPredictionsCard
@@ -251,19 +251,19 @@ function MatchPredictionsCard({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-lg">{match.homeTeam} vs {match.awayTeam}</CardTitle>
-            <CardDescription className="flex items-center gap-2 mt-1">
-              <Calendar className="w-4 h-4" />
+          <div className="min-w-0 flex-1">
+            <CardTitle className="text-base sm:text-lg truncate">{match.homeTeam} vs {match.awayTeam}</CardTitle>
+            <CardDescription className="flex items-center gap-1 sm:gap-2 mt-1 text-xs sm:text-sm">
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
               {formatDate(match.matchDate)}
-              <span className="mx-2">•</span>
-              <Users className="w-4 h-4" />
-              {getGroupName(match.groupId)}
+              <span className="mx-1 sm:mx-2">•</span>
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="truncate">{getGroupName(match.groupId)}</span>
             </CardDescription>
           </div>
-          <Badge variant={match.isFinished ? "secondary" : "default"}>
+          <Badge variant={match.isFinished ? "secondary" : "default"} className="text-xs sm:text-sm ml-2">
             {match.isFinished ? "Finalizado" : "Próximo"}
           </Badge>
         </div>
@@ -271,12 +271,12 @@ function MatchPredictionsCard({
       
       <CardContent>
         {showResults && match.isFinished && match.stats && (
-          <div className="mb-6 p-4 bg-slate-50 rounded-lg">
-            <h4 className="font-semibold mb-2 text-slate-800">Resultado Final</h4>
-            <div className="text-2xl font-bold text-slate-700">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-slate-50 rounded-lg">
+            <h4 className="font-semibold mb-2 text-slate-800 text-sm sm:text-base">Resultado Final</h4>
+            <div className="text-xl sm:text-2xl font-bold text-slate-700">
               {match.stats.homeScore} - {match.stats.awayScore}
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
               <div>
                 <span className="font-medium">Corners:</span> {match.stats.homeCorners || 0} - {match.stats.awayCorners || 0}
               </div>
@@ -298,17 +298,17 @@ function MatchPredictionsCard({
         )}
 
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="all">Todos ({predictions.length})</TabsTrigger>
-            <TabsTrigger value="mine">Mi Pronóstico</TabsTrigger>
-            <TabsTrigger value="others">Otros ({otherPredictions.length})</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 h-8 sm:h-9">
+            <TabsTrigger value="all" className="text-xs sm:text-sm">Todos ({predictions.length})</TabsTrigger>
+            <TabsTrigger value="mine" className="text-xs sm:text-sm">Mi Pronóstico</TabsTrigger>
+            <TabsTrigger value="others" className="text-xs sm:text-sm">Otros ({otherPredictions.length})</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="all" className="space-y-3">
+          <TabsContent value="all" className="space-y-2 sm:space-y-3">
             {predictions.length === 0 ? (
-              <div className="text-center py-8">
-                <Target className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Aún no hay pronósticos para este partido</p>
+              <div className="text-center py-6 sm:py-8">
+                <Target className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <p className="text-sm sm:text-base text-muted-foreground">Aún no hay pronósticos para este partido</p>
               </div>
             ) : (
               predictions.map((prediction) => (
@@ -324,7 +324,7 @@ function MatchPredictionsCard({
             )}
           </TabsContent>
 
-          <TabsContent value="mine" className="space-y-3">
+          <TabsContent value="mine" className="space-y-2 sm:space-y-3">
             {userPrediction ? (
               <PredictionItem
                 prediction={userPrediction}
@@ -334,18 +334,18 @@ function MatchPredictionsCard({
                 matchStats={match.stats}
               />
             ) : (
-              <div className="text-center py-8">
-                <Target className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No has hecho pronóstico para este partido</p>
+              <div className="text-center py-6 sm:py-8">
+                <Target className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <p className="text-sm sm:text-base text-muted-foreground">No has hecho pronóstico para este partido</p>
               </div>
             )}
           </TabsContent>
 
-          <TabsContent value="others" className="space-y-3">
+          <TabsContent value="others" className="space-y-2 sm:space-y-3">
             {otherPredictions.length === 0 ? (
-              <div className="text-center py-8">
-                <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Otros participantes aún no han hecho pronósticos</p>
+              <div className="text-center py-6 sm:py-8">
+                <Users className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <p className="text-sm sm:text-base text-muted-foreground">Otros participantes aún no han hecho pronósticos</p>
               </div>
             ) : (
               otherPredictions.map((prediction) => (
@@ -384,14 +384,14 @@ function PredictionItem({
   const stats = prediction.stats
 
   return (
-    <div className={`p-4 rounded-lg border ${
+    <div className={`p-3 sm:p-4 rounded-lg border ${
       isCurrentUser 
         ? 'bg-blue-50 border-blue-200' 
         : 'bg-slate-50 border-slate-200'
     }`}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className={`font-semibold ${
+      <div className="flex items-center justify-between mb-2 sm:mb-3">
+        <div className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1">
+          <span className={`font-semibold text-sm sm:text-base truncate ${
             isCurrentUser ? 'text-blue-800' : 'text-slate-800'
           }`}>
             {userName}
@@ -400,20 +400,20 @@ function PredictionItem({
             <Badge variant="secondary" className="text-xs">Tú</Badge>
           )}
         </div>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-xs text-muted-foreground ml-2">
           {new Intl.DateTimeFormat("es-ES").format(prediction.createdAt)}
         </span>
       </div>
 
       {/* Goles */}
-      <div className="mb-3">
-        <div className="text-lg font-bold text-slate-700">
+      <div className="mb-2 sm:mb-3">
+        <div className="text-base sm:text-lg font-bold text-slate-700">
           ⚽ {stats.homeScore} - {stats.awayScore}
         </div>
       </div>
 
       {/* Estadísticas adicionales */}
-      <div className="grid grid-cols-2 gap-2 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
         <div className="flex justify-between">
           <span className="text-muted-foreground">Corners:</span>
           <span className="font-medium">{stats.homeCorners || 0} - {stats.awayCorners || 0}</span>

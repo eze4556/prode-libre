@@ -165,24 +165,24 @@ export function GroupManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <Dialog open={joinDialogOpen} onOpenChange={setJoinDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="flex-1 bg-transparent">
+            <Button variant="outline" className="flex-1 bg-transparent h-10 sm:h-11">
               <Users className="w-4 h-4 mr-2" />
-              Unirse a Grupo
+              <span className="text-sm sm:text-base">Unirse a Grupo</span>
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Unirse a un Grupo</DialogTitle>
-              <DialogDescription>Ingresa el código del grupo para unirte</DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">Unirse a un Grupo</DialogTitle>
+              <DialogDescription className="text-sm sm:text-base">Ingresa el código del grupo para unirte</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleJoinGroup} className="space-y-4">
+            <form onSubmit={handleJoinGroup} className="space-y-3 sm:space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="joinCode">Código del Grupo</Label>
+                <Label htmlFor="joinCode" className="text-sm sm:text-base">Código del Grupo</Label>
                 <Input
                   id="joinCode"
                   placeholder="Ej: ABC123"
@@ -190,10 +190,11 @@ export function GroupManagement() {
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                   maxLength={6}
                   required
+                  className="h-9 sm:h-10"
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={isJoining}>
-                {isJoining ? "Uniéndose..." : "Unirse al Grupo"}
+              <Button type="submit" className="w-full h-9 sm:h-10" disabled={isJoining}>
+                <span className="text-sm sm:text-base">{isJoining ? "Uniéndose..." : "Unirse al Grupo"}</span>
               </Button>
             </form>
           </DialogContent>
@@ -202,39 +203,41 @@ export function GroupManagement() {
         {userProfile?.role === "admin" && (
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex-1">
+              <Button className="flex-1 h-10 sm:h-11">
                 <Plus className="w-4 h-4 mr-2" />
-                Crear Grupo
+                <span className="text-sm sm:text-base">Crear Grupo</span>
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Crear Nuevo Grupo</DialogTitle>
-                <DialogDescription>Configura tu grupo de pronósticos</DialogDescription>
+                <DialogTitle className="text-base sm:text-lg">Crear Nuevo Grupo</DialogTitle>
+                <DialogDescription className="text-sm sm:text-base">Configura tu grupo de pronósticos</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleCreateGroup} className="space-y-4">
+              <form onSubmit={handleCreateGroup} className="space-y-3 sm:space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="groupName">Nombre del Grupo</Label>
+                  <Label htmlFor="groupName" className="text-sm sm:text-base">Nombre del Grupo</Label>
                   <Input
                     id="groupName"
                     placeholder="Ej: Liga de Amigos"
                     value={groupName}
                     onChange={(e) => setGroupName(e.target.value)}
                     required
+                    className="h-9 sm:h-10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="groupDescription">Descripción</Label>
+                  <Label htmlFor="groupDescription" className="text-sm sm:text-base">Descripción</Label>
                   <Textarea
                     id="groupDescription"
                     placeholder="Describe tu grupo..."
                     value={groupDescription}
                     onChange={(e) => setGroupDescription(e.target.value)}
                     rows={3}
+                    className="text-sm sm:text-base"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="maxParticipants">Máximo de Participantes (opcional)</Label>
+                  <Label htmlFor="maxParticipants" className="text-sm sm:text-base">Máximo de Participantes (opcional)</Label>
                   <Input
                     id="maxParticipants"
                     type="number"
@@ -243,10 +246,11 @@ export function GroupManagement() {
                     onChange={(e) => setMaxParticipants(e.target.value)}
                     min="2"
                     max="100"
+                    className="h-9 sm:h-10"
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isCreating}>
-                  {isCreating ? "Creando..." : "Crear Grupo"}
+                <Button type="submit" className="w-full h-9 sm:h-10" disabled={isCreating}>
+                  <span className="text-sm sm:text-base">{isCreating ? "Creando..." : "Crear Grupo"}</span>
                 </Button>
               </form>
             </DialogContent>
@@ -257,49 +261,49 @@ export function GroupManagement() {
       {/* Groups List */}
       {groups.length === 0 ? (
         <Card>
-          <CardContent className="text-center py-12">
-            <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No tienes grupos</h3>
-            <p className="text-muted-foreground mb-4">Únete a un grupo existente o crea uno nuevo para comenzar</p>
+          <CardContent className="text-center py-8 sm:py-12">
+            <Users className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-semibold mb-2">No tienes grupos</h3>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4">Únete a un grupo existente o crea uno nuevo para comenzar</p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 lg:grid-cols-2">
           {groups.map((group) => (
             <Card key={group.id} className="relative">
-              <CardHeader>
+              <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="flex items-center gap-2">
-                      {group.name}
-                      {group.adminId === userProfile?.uid && <Crown className="w-4 h-4 text-primary" />}
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                      <span className="truncate">{group.name}</span>
+                      {group.adminId === userProfile?.uid && <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-primary flex-shrink-0" />}
                     </CardTitle>
-                    <CardDescription className="mt-1">{group.description || "Sin descripción"}</CardDescription>
+                    <CardDescription className="mt-1 text-xs sm:text-sm">{group.description || "Sin descripción"}</CardDescription>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Users className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                  <Users className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span>{group.participants.length} participantes</span>
                   {group.maxParticipants && <span>/ {group.maxParticipants}</span>}
                 </div>
               </CardHeader>
 
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="pt-0">
+                <div className="space-y-2 sm:space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Código del grupo:</span>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="font-mono">
+                    <span className="text-xs sm:text-sm font-medium">Código del grupo:</span>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <Badge variant="outline" className="font-mono text-xs sm:text-sm">
                         {group.joinCode}
                       </Badge>
-                      <Button size="sm" variant="ghost" onClick={() => copyJoinCode(group.joinCode)}>
+                      <Button size="sm" variant="ghost" onClick={() => copyJoinCode(group.joinCode)} className="h-6 w-6 sm:h-8 sm:w-8 p-0">
                         <Copy className="w-3 h-3" />
                       </Button>
                     </div>
                   </div>
 
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-xs sm:text-sm text-muted-foreground">
                     <p>Admin: {group.adminName}</p>
                     <p className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
@@ -311,11 +315,11 @@ export function GroupManagement() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full bg-transparent"
+                      className="w-full bg-transparent h-8 sm:h-9"
                       onClick={() => handleLeaveGroup(group.id, group.name)}
                     >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Abandonar Grupo
+                      <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                      <span className="text-xs sm:text-sm">Abandonar Grupo</span>
                     </Button>
                   )}
                 </div>
