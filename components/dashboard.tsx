@@ -471,7 +471,7 @@ export function Dashboard() {
         {activeTab === "predictions" && <PredictionSystem />}
         {activeTab === "view-predictions" && <PredictionsView />}
         {activeTab === "groups" && <GroupManagement />}
-        {activeTab === "admin" && <AdminPanel />}
+               {activeTab === "admin" && <AdminPanel onNavigateToGroups={() => setActiveTab("groups")} />}
         {activeTab === "participants" && <ParticipantManagement />}
         {activeTab === "team-demo" && <TeamSearchDemo />}
         {activeTab === "superadmin" && <SuperAdminPanel />}

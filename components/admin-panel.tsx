@@ -26,7 +26,11 @@ import { useToast } from "@/hooks/use-toast"
 import { TeamSelector } from "@/components/team-selector"
 import { Plus, Calendar, Trophy, Trash2, Edit, Users, Target, Settings } from "lucide-react"
 
-export function AdminPanel() {
+interface AdminPanelProps {
+  onNavigateToGroups?: () => void
+}
+
+export function AdminPanel({ onNavigateToGroups }: AdminPanelProps = {}) {
   const { userProfile } = useAuth()
   const { toast } = useToast()
   const [adminGroups, setAdminGroups] = useState<Group[]>([])
@@ -375,7 +379,7 @@ export function AdminPanel() {
             <p className="text-muted-foreground mb-4">
               Para crear partidos, primero necesitas crear un grupo de pronósticos
             </p>
-            <Button onClick={() => window.location.href = '#groups'}>
+            <Button onClick={() => onNavigateToGroups ? onNavigateToGroups() : window.location.href = '#groups'}>
               <Plus className="w-4 h-4 mr-2" />
               Crear Grupo
             </Button>
