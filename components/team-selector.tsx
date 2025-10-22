@@ -76,6 +76,9 @@ export function TeamSelector({
     if (query.trim() === "") {
       setSelectedTeam(null)
       onChange("", undefined)
+    } else {
+      // Actualizar el valor incluso si no hay equipo seleccionado
+      onChange(query, undefined)
     }
   }
 
@@ -94,19 +97,23 @@ export function TeamSelector({
       
       <div className="relative">
         <div className="flex items-center gap-2">
-          {selectedTeam?.logo && (
+          {selectedTeam?.logo ? (
             <img 
               src={selectedTeam.logo} 
               alt={selectedTeam.name}
               className="w-8 h-8 object-contain rounded"
               onError={(e) => {
-                e.currentTarget.style.display = 'none'
+                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iI0YzRjRGNiIvPgo8cGF0aCBkPSJNOCAxMkgxNlYyMEg4VjEyWiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMTYgOEgyNFYxNkgxNlY4WiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'
               }}
             />
+          ) : (
+            <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+              <Shield className="w-4 h-4 text-gray-400" />
+            </div>
           )}
           <Input
             id="team-search"
-            placeholder={placeholder}
+            placeholder={placeholder || "Buscar equipo o escribir nombre personalizado..."}
             value={searchQuery}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
@@ -128,14 +135,20 @@ export function TeamSelector({
                     onClick={() => handleTeamSelect(team)}
                   >
                     <div className="flex items-center gap-3 w-full">
-                      <img 
-                        src={team.logo} 
-                        alt={team.name}
-                        className="w-6 h-6 object-contain"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
+                      {team.logo ? (
+                        <img 
+                          src={team.logo} 
+                          alt={team.name}
+                          className="w-6 h-6 object-contain"
+                          onError={(e) => {
+                            e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNCIgZmlsbD0iI0YzRjRGNiIvPgo8cGF0aCBkPSJNNiA5SDEyVjE1SDZWOloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTEyIDZIMThWMTJIMTJWNFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+Cg=='
+                          }}
+                        />
+                      ) : (
+                        <div className="w-6 h-6 bg-gray-200 rounded flex items-center justify-center">
+                          <Shield className="w-3 h-3 text-gray-400" />
+                        </div>
+                      )}
                       <div className="flex-1 text-left">
                         <div className="font-medium">{team.name}</div>
                         <div className="text-xs text-muted-foreground">
@@ -153,18 +166,31 @@ export function TeamSelector({
             </CardContent>
           </Card>
         )}
+
+        {/* Ayuda para equipos personalizados */}
+        {!showResults && !selectedTeam && (
+          <div className="text-xs text-gray-500 mt-1 px-1">
+            💡 Puedes escribir cualquier nombre de equipo personalizado
+          </div>
+        )}
       </div>
 
       {selectedTeam && (
         <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
-          <img 
-            src={selectedTeam.logo} 
-            alt={selectedTeam.name}
-            className="w-6 h-6 object-contain"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none'
-            }}
-          />
+          {selectedTeam.logo ? (
+            <img 
+              src={selectedTeam.logo} 
+              alt={selectedTeam.name}
+              className="w-6 h-6 object-contain"
+              onError={(e) => {
+                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNCIgZmlsbD0iI0YzRjRGNiIvPgo8cGF0aCBkPSJNNiA5SDEyVjE1SDZWOloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTEyIDZIMThWMTJIMTJWNFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+Cg=='
+              }}
+            />
+          ) : (
+            <div className="w-6 h-6 bg-gray-200 rounded flex items-center justify-center">
+              <Shield className="w-3 h-3 text-gray-400" />
+            </div>
+          )}
           <span className="text-sm font-medium">{selectedTeam.name}</span>
           <Badge variant="secondary" className="text-xs">
             {selectedTeam.country}
@@ -173,10 +199,13 @@ export function TeamSelector({
       )}
 
       {value && !selectedTeam && (
-        <div className="flex items-center gap-2 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <Shield className="w-4 h-4 text-yellow-600" />
-          <span className="text-sm text-yellow-800">
-            Equipo personalizado: {value}
+        <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+          <Shield className="w-4 h-4 text-blue-600" />
+          <span className="text-sm text-blue-800">
+            {value} (sin escudo)
+          </span>
+          <span className="text-xs text-blue-600 ml-auto">
+            ✓ Equipo personalizado
           </span>
         </div>
       )}

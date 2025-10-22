@@ -12,6 +12,8 @@ import {
 } from "firebase/firestore"
 import { db } from "./firebase"
 import type { Match, Prediction, MatchStats, PredictionStats } from "./types"
+import { updateUserAchievements } from "./achievements"
+import { calculateUserStats } from "./scoring"
 
 // Helper function to safely convert Firestore timestamp to Date
 function convertToDate(timestamp: any): Date {
@@ -30,6 +32,7 @@ function convertToDate(timestamp: any): Date {
 // Create a new match (admin only)
 export async function createMatch(
   groupId: string,
+  jornadaId: string,
   homeTeam: string,
   awayTeam: string,
   matchDate: Date,
@@ -39,17 +42,37 @@ export async function createMatch(
   try {
     console.log("Creating match with data:", {
       groupId,
+      jornadaId,
       homeTeam,
       awayTeam,
       matchDate: matchDate.toISOString()
     })
 
+    // Validar que si se especifica una jornada, la fecha del partido esté dentro del rango
+    if (jornadaId) {
+      const { getJornada } = await import("./jornadas")
+      const jornada = await getJornada(jornadaId)
+      
+      if (jornada) {
+        // Crear fechas en hora local para evitar problemas de zona horaria
+        const matchDateOnly = new Date(matchDate.getFullYear(), matchDate.getMonth(), matchDate.getDate(), 0, 0, 0, 0)
+        
+        const jornadaStartDate = new Date(jornada.startDate.getFullYear(), jornada.startDate.getMonth(), jornada.startDate.getDate(), 0, 0, 0, 0)
+        const jornadaEndDate = new Date(jornada.endDate.getFullYear(), jornada.endDate.getMonth(), jornada.endDate.getDate(), 23, 59, 59, 999)
+        
+        if (matchDateOnly < jornadaStartDate || matchDateOnly > jornadaEndDate) {
+          throw new Error(`La fecha del partido debe estar entre ${jornada.startDate.toLocaleDateString('es-ES')} y ${jornada.endDate.toLocaleDateString('es-ES')}`)
+        }
+      }
+    }
+
     const matchData: Omit<Match, "id"> = {
       groupId,
+      jornadaId,
       homeTeam,
       awayTeam,
-      homeTeamLogo,
-      awayTeamLogo,
+      homeTeamLogo: homeTeamLogo || null,
+      awayTeamLogo: awayTeamLogo || null,
       matchDate,
       isFinished: false,
       predictions: {},
@@ -64,6 +87,27 @@ export async function createMatch(
   } catch (error) {
     console.error("Error creating match:", error)
     throw error
+  }
+}
+
+// Get matches for a jornada
+export async function getMatchesByJornada(jornadaId: string): Promise<Match[]> {
+  try {
+    const matchesRef = collection(db, "matches")
+    const q = query(matchesRef, where("jornadaId", "==", jornadaId), orderBy("matchDate", "asc"))
+    const querySnapshot = await getDocs(q)
+
+    return querySnapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+          matchDate: convertToDate(doc.data().matchDate),
+        }) as Match,
+    )
+  } catch (error) {
+    console.error("Error getting matches by jornada:", error)
+    throw new Error("No se pudieron cargar los partidos de la jornada")
   }
 }
 
@@ -202,13 +246,25 @@ export async function submitPrediction(
     // Check if user already has a prediction
     const existingPrediction = match.predictions[userId]
     if (existingPrediction) {
-      throw new Error("Ya tienes un pronóstico para este partido. No se puede modificar.")
+      // Validar si aún se puede modificar (30 min antes del partido)
+      const now = new Date()
+      const matchStart = new Date(match.matchDate.getTime() - 30 * 60 * 1000)
+      
+      if (now > matchStart) {
+        throw new Error("Ya no puedes modificar tu pronóstico. El plazo cerró 30 minutos antes del partido.")
+      }
+      // Si aún puede modificarlo, continuamos con la actualización
     }
 
     const prediction: Prediction = {
       uid: userId,
-      createdAt: new Date(),
+      createdAt: existingPrediction?.createdAt || new Date(), // Mantener fecha original o nueva
       stats: predictionStats,
+    }
+    
+    // Solo agregar updatedAt si existía un pronóstico previo
+    if (existingPrediction) {
+      prediction.updatedAt = new Date()
     }
 
     console.log("New prediction:", prediction)
@@ -263,23 +319,36 @@ async function calculatePredictionPoints(matchId: string, matchStats: MatchStats
   } as Match
   const updatedPredictions = { ...match.predictions }
 
-  // Import scoring functions
-  const { calculatePredictionPoints: calcPoints } = await import("./scoring")
+  const actualResult = matchStats.result
 
   // Calculate points for each prediction
   for (const [userId, prediction] of Object.entries(updatedPredictions)) {
-    const breakdown = calcPoints(prediction.stats, matchStats)
+    const predictedResult = prediction.stats.result
+    const isCorrect = predictedResult === actualResult
     
     updatedPredictions[userId] = {
       ...prediction,
-      points: breakdown.total,
-      breakdown,
+      points: isCorrect ? 1 : 0, // 1 punto por resultado correcto
+      breakdown: {
+        result: isCorrect ? 1 : 0,
+        total: isCorrect ? 1 : 0,
+      },
     }
   }
 
   await updateDoc(matchRef, {
     predictions: updatedPredictions,
   })
+
+  // Actualizar logros de cada usuario
+  for (const [userId, prediction] of Object.entries(updatedPredictions)) {
+    // Obtener todas las predicciones de este usuario en todos los partidos de este grupo
+    const userPredictions = Object.values(updatedPredictions).filter(p => p.uid === userId)
+    // Calcular stats del usuario
+    const userStats = calculateUserStats(userPredictions, match.groupId, userId)
+    // Actualizar logros
+    await updateUserAchievements(userId, userPredictions, userStats)
+  }
 }
 
 // Get user's prediction for a match
@@ -304,6 +373,24 @@ export function canPredict(match: Match, userId?: string): boolean {
   
   // Check if user already has a prediction
   if (userId && match.predictions[userId]) {
+    return false
+  }
+  
+  return true
+}
+
+// Función para verificar si se puede modificar un pronóstico (permitir hasta 30 min antes)
+export function canModifyPrediction(match: Match): boolean {
+  const now = new Date()
+  const matchStart = new Date(match.matchDate.getTime() - 30 * 60 * 1000) // 30 min before
+  
+  // No se puede si el partido ya terminó
+  if (match.isFinished) {
+    return false
+  }
+  
+  // No se puede si ya pasaron los 30 minutos antes del partido
+  if (now > matchStart) {
     return false
   }
   

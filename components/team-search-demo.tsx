@@ -37,42 +37,28 @@ export function TeamSearchDemo() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-4xl mx-auto p-2 sm:p-6 space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="w-5 h-5" />
             Demo: Búsqueda de Equipos
           </CardTitle>
+          <p className="text-sm text-slate-600">
+            Esta herramienta te permite probar la búsqueda de equipos. Busca equipos reales (ej: River Plate, Boca Juniors, Flamengo) para verificar que todo funciona correctamente.
+          </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
             <Input
               placeholder="Buscar equipo (ej: River Plate, Boca Juniors, Flamengo...)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+              className="w-full"
             />
-            <Button onClick={handleSearch} disabled={loading}>
+            <Button onClick={handleSearch} disabled={loading} className="w-full sm:w-auto">
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                console.log("🧪 Running API test...")
-                testFootballAPI()
-              }}
-            >
-              🧪 Test API
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                console.log("🔬 Testing API directly...")
-                testAPIDirectly()
-              }}
-            >
-              🔬 Direct Test
             </Button>
           </div>
 
@@ -90,7 +76,7 @@ export function TeamSearchDemo() {
                 <CheckCircle className="w-4 h-4" />
                 Equipos Encontrados ({results.length})
               </h3>
-              <div className="grid gap-2">
+              <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
                 {results.map((team) => (
                   <div
                     key={team.id}
@@ -99,14 +85,14 @@ export function TeamSearchDemo() {
                     <img
                       src={team.logo}
                       alt={team.name}
-                      className="w-8 h-8 object-contain"
+                      className="w-10 h-10 object-contain flex-shrink-0"
                       onError={(e) => {
                         e.currentTarget.style.display = "none"
                       }}
                     />
-                    <div className="flex-1">
-                      <div className="font-medium text-green-800">{team.name}</div>
-                      <div className="text-sm text-green-600">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-green-800 truncate">{team.name}</div>
+                      <div className="text-sm text-green-600 truncate">
                         {team.country}
                         {team.founded && ` • Fundado ${team.founded}`}
                       </div>
@@ -136,7 +122,7 @@ export function TeamSearchDemo() {
           <CardTitle>🧪 Casos de Prueba</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
             {[
               "River Plate",
               "Boca Juniors",
@@ -162,7 +148,7 @@ export function TeamSearchDemo() {
                   setSearchQuery(team)
                   setTimeout(() => handleSearch(), 100)
                 }}
-                className="text-xs"
+                className="text-xs w-full"
               >
                 {team}
               </Button>

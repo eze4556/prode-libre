@@ -1,7 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* Updated color palette to match Prode Libre orange/black theme */
@@ -119,9 +118,91 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Safe area solo para el header - Simplificado */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  
+  /* Para el header móvil - Más específico */
+  .mobile-header {
+    padding-top: env(safe-area-inset-top, 0px);
+    background-color: var(--background);
+    position: relative;
+    z-index: 50;
+  }
+  
+  /* Asegurar que el contenido no se superponga con la status bar */
+  .mobile-container {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  
+  /* Para dispositivos con notch */
+  @supports (padding: max(0px)) {
+    .mobile-header {
+      padding-top: max(env(safe-area-inset-top), 24px);
+    }
+    
+    .mobile-container {
+      padding-top: max(env(safe-area-inset-top), 24px);
+    }
+  }
+  
+  /* Fallback para dispositivos sin soporte de safe-area - Solo header */
+  @media screen and (max-width: 768px) {
+    .mobile-header {
+      padding-top: 24px; /* Fallback para Android */
+    }
+    
+    .mobile-container {
+      padding-top: 24px; /* Fallback para Android */
+    }
+  }
+  
+  /* Mejorar touch en móvil - Más específico */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Asegurar que los botones sean clickeables en móvil */
+  button, [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px; /* Tamaño mínimo recomendado para touch */
+    min-width: 44px;
+  }
+  
+  /* Mejorar la respuesta táctil */
+  @media (hover: none) and (pointer: coarse) {
+    button:hover {
+      transform: none;
+    }
+    
+    button:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+    
+    /* Asegurar que los botones no se superpongan con elementos del sistema */
+    button {
+      position: relative;
+      z-index: 1;
+    }
+  }
+  
+  /* Para dispositivos con home indicator */
+  @media screen and (max-width: 768px) {
+    .mobile-content {
+      padding-bottom: 16px; /* Espacio adicional para home indicator */
+    }
   }
 }

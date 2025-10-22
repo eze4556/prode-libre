@@ -1,4 +1,4 @@
-import { doc, updateDoc, addDoc, collection, getDocs, query, orderBy, where, getDoc } from "firebase/firestore"
+import { doc, updateDoc, addDoc, collection, getDocs, query, orderBy, where, getDoc, deleteDoc } from "firebase/firestore"
 import { db } from "./firebase"
 
 export interface PaymentRequest {
@@ -138,4 +138,24 @@ export async function rejectPaymentRequest(
     processedAt: new Date(),
     processedBy: processedBy,
   })
+}
+
+// Delete payment request (super admin only) - for cleaning up resolved requests
+export async function deletePaymentRequest(paymentId: string): Promise<void> {
+  const paymentRef = doc(db, "paymentRequests", paymentId)
+  
+  // Get payment request data to verify it exists
+  const paymentDoc = await getDoc(paymentRef)
+  if (!paymentDoc.exists()) {
+    throw new Error("Payment request not found")
+  }
+  
+  // Only allow deletion of resolved requests (approved or rejected)
+  const paymentData = paymentDoc.data()
+  if (paymentData.status === "pending") {
+    throw new Error("Cannot delete pending payment requests. Please approve or reject first.")
+  }
+  
+  // Delete the payment request
+  await deleteDoc(paymentRef)
 }

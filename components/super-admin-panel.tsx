@@ -9,8 +9,14 @@ import {
   getAllPaymentRequests, 
   approvePaymentRequest, 
   rejectPaymentRequest,
+  deletePaymentRequest,
   type PaymentRequest 
 } from "@/lib/payments"
+import { 
+  getSystemStats, 
+  getConcurrentMatches,
+  type SystemStats 
+} from "@/lib/system-stats"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -34,19 +40,45 @@ import {
   DollarSign,
   Calendar,
   Building,
-  FileText
+  FileText,
+  Trash2,
+  Target,
+  Crown,
+  User,
+  Trophy,
+  Activity
 } from "lucide-react"
 
 export function SuperAdminPanel() {
   const { userProfile } = useAuth()
   const { toast } = useToast()
   const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([])
+  const [systemStats, setSystemStats] = useState<SystemStats | null>(null)
+  const [concurrentMatches, setConcurrentMatches] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState<string | null>(null)
 
   useEffect(() => {
-    loadPaymentRequests()
+    loadAllData()
   }, [])
+
+  const loadAllData = async () => {
+    try {
+      await Promise.all([
+        loadPaymentRequests(),
+        loadSystemStats(),
+        loadConcurrentMatches()
+      ])
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los datos del sistema",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const loadPaymentRequests = async () => {
     try {
@@ -58,8 +90,24 @@ export function SuperAdminPanel() {
         description: "No se pudieron cargar las solicitudes de pago",
         variant: "destructive",
       })
-    } finally {
-      setLoading(false)
+    }
+  }
+
+  const loadSystemStats = async () => {
+    try {
+      const stats = await getSystemStats()
+      setSystemStats(stats)
+    } catch (error) {
+      console.error("Error loading system stats:", error)
+    }
+  }
+
+  const loadConcurrentMatches = async () => {
+    try {
+      const concurrent = await getConcurrentMatches()
+      setConcurrentMatches(concurrent)
+    } catch (error) {
+      console.error("Error loading concurrent matches:", error)
     }
   }
 
@@ -100,6 +148,32 @@ export function SuperAdminPanel() {
       toast({
         title: "Error",
         description: error.message || "No se pudo rechazar la solicitud",
+        variant: "destructive",
+      })
+    } finally {
+      setProcessing(null)
+    }
+  }
+
+  const handleDelete = async (paymentId: string, userName: string) => {
+    const confirmMessage = `¿Estás seguro de eliminar la solicitud de pago de "${userName}"?\n\nEsta acción eliminará permanentemente la solicitud de la base de datos.\n\nEsta acción NO se puede deshacer.`
+    
+    if (!confirm(confirmMessage)) {
+      return
+    }
+
+    setProcessing(paymentId)
+    try {
+      await deletePaymentRequest(paymentId)
+      toast({
+        title: "Solicitud eliminada",
+        description: `La solicitud de "${userName}" ha sido eliminada permanentemente`,
+      })
+      loadPaymentRequests()
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo eliminar la solicitud",
         variant: "destructive",
       })
     } finally {
@@ -166,7 +240,58 @@ export function SuperAdminPanel() {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Partidos en simultáneo */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Partidos Hoy</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">{concurrentMatches}</div>
+            <p className="text-xs text-muted-foreground">En simultáneo</p>
+          </CardContent>
+        </Card>
+
+        {/* Total de usuarios */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Usuarios</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">{systemStats?.totalUsers || 0}</div>
+            <p className="text-xs text-muted-foreground">Registrados</p>
+          </CardContent>
+        </Card>
+
+        {/* Administradores */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Administradores</CardTitle>
+            <Crown className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">{systemStats?.totalAdmins || 0}</div>
+            <p className="text-xs text-muted-foreground">Con privilegios</p>
+          </CardContent>
+        </Card>
+
+        {/* Pronósticos acertados */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pronósticos Acertados</CardTitle>
+            <Target className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{systemStats?.correctPredictions || 0}</div>
+            <p className="text-xs text-muted-foreground">De {systemStats?.totalPredictions || 0} total</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Additional Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Solicitudes</CardTitle>
@@ -262,11 +387,12 @@ export function SuperAdminPanel() {
                 request={request}
                 onApprove={() => {}}
                 onReject={() => {}}
-                processing={false}
+                onDelete={() => handleDelete(request.id!, request.userName)}
+                processing={processing === request.id}
                 formatDate={formatDate}
                 formatCurrency={formatCurrency}
                 getStatusBadge={getStatusBadge}
-                readOnly
+                readOnly={false}
               />
             ))
           )}
@@ -280,6 +406,7 @@ interface PaymentRequestCardProps {
   request: PaymentRequest
   onApprove: () => void
   onReject: () => void
+  onDelete?: () => void
   processing: boolean
   formatDate: (date: Date) => string
   formatCurrency: (amount: number) => string
@@ -291,6 +418,7 @@ function PaymentRequestCard({
   request, 
   onApprove, 
   onReject, 
+  onDelete,
   processing, 
   formatDate, 
   formatCurrency, 
@@ -379,6 +507,22 @@ function PaymentRequestCard({
                 size="sm"
               >
                 Rechazar
+              </Button>
+            </div>
+          )}
+
+          {/* Delete button for processed requests */}
+          {!readOnly && request.status !== "pending" && onDelete && (
+            <div className="flex justify-end">
+              <Button 
+                variant="destructive" 
+                onClick={onDelete} 
+                disabled={processing}
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                {processing ? "Eliminando..." : "Eliminar"}
               </Button>
             </div>
           )}

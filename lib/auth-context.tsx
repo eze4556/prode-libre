@@ -26,7 +26,7 @@ interface AuthContextType {
   userProfile: UserProfile | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string, displayName?: string) => Promise<void>
+  signUp: (email: string, password: string, displayName?: string, role?: "admin" | "participant") => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -57,10 +57,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const userDoc = await getDoc(doc(db, "users", user.uid))
             if (userDoc.exists()) {
               const data = userDoc.data()
+              
+              // Convertir fechas de logros si existen
+              const achievements = data.achievements?.map((achievement: any) => ({
+                ...achievement,
+                unlockedAt: achievement.unlockedAt?.toDate ? achievement.unlockedAt.toDate() : achievement.unlockedAt
+              })) || []
+              
               setUserProfile({
                 uid: user.uid, // Always include the uid from Firebase Auth
                 ...data,
                 createdAt: data.createdAt?.toDate() || new Date(),
+                achievements: achievements,
               } as UserProfile)
             }
           }
@@ -92,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const signUp = async (email: string, password: string, displayName?: string) => {
+  const signUp = async (email: string, password: string, displayName?: string, role: "admin" | "participant" = "participant") => {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, email, password)
 
@@ -100,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userProfile: UserProfile = {
         uid: user.uid,
         email: user.email!,
-        role: "participant", // Default role
+        role: role, // Use the selected role
         displayName: displayName || email.split("@")[0],
         createdAt: new Date(),
       }

@@ -1,3 +1,18 @@
+export type MembershipStatus = 'pending' | 'approved' | 'rejected' | 'banned'
+
+export interface GroupMembership {
+  uid: string
+  userName: string
+  userEmail: string
+  status: MembershipStatus
+  requestedAt: Date
+  approvedAt?: Date
+  approvedBy?: string
+  rejectedAt?: Date
+  rejectedBy?: string
+  rejectionReason?: string
+}
+
 export interface Group {
   id: string
   name: string
@@ -6,55 +21,44 @@ export interface Group {
   adminName: string
   participants: string[]
   participantNames: { [uid: string]: string }
+  memberships: { [uid: string]: GroupMembership }
   createdAt: Date
   isActive: boolean
   joinCode: string
   maxParticipants?: number
+  requiresApproval: boolean
+}
+
+export interface Jornada {
+  id: string
+  groupId: string
+  name: string
+  description?: string
+  startDate: Date
+  endDate: Date
+  isActive: boolean
+  createdAt: Date
+  createdBy: string
 }
 
 export interface MatchStats {
-  // Resultado principal
-  homeScore: number
-  awayScore: number
-  
-  // Estadísticas adicionales
-  homeCorners?: number
-  awayCorners?: number
-  homePenalties?: number
-  awayPenalties?: number
-  homeFreeKicks?: number
-  awayFreeKicks?: number
-  homeYellowCards?: number
-  awayYellowCards?: number
-  homeRedCards?: number
-  awayRedCards?: number
+  // Solo resultado del partido (sin goles)
+  result: 'local' | 'empate' | 'visitante'
 }
 
 export interface PredictionStats {
-  // Pronóstico principal
-  homeScore: number
-  awayScore: number
-  
-  // Pronósticos adicionales
-  homeCorners?: number
-  awayCorners?: number
-  homePenalties?: number
-  awayPenalties?: number
-  homeFreeKicks?: number
-  awayFreeKicks?: number
-  homeYellowCards?: number
-  awayYellowCards?: number
-  homeRedCards?: number
-  awayRedCards?: number
+  // Solo resultado predicho
+  result: 'local' | 'empate' | 'visitante'
 }
 
 export interface Match {
   id: string
   groupId: string
+  jornadaId: string
   homeTeam: string
   awayTeam: string
-  homeTeamLogo?: string
-  awayTeamLogo?: string
+  homeTeamLogo?: string | null
+  awayTeamLogo?: string | null
   matchDate: Date
   isFinished: boolean
   predictions: { [uid: string]: Prediction }
@@ -64,16 +68,10 @@ export interface Match {
 export interface Prediction {
   uid: string
   createdAt: Date
+  updatedAt?: Date
   points?: number
   breakdown?: {
-    exactScore: number
-    result: number
-    corners: number
-    penalties: number
-    freeKicks: number
-    yellowCards: number
-    redCards: number
-    streakBonus: number
+    result: number  // Solo puntos por resultado correcto
     total: number
   }
   stats: PredictionStats

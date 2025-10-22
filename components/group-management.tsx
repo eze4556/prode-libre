@@ -4,13 +4,12 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
-import { getUserGroups, joinGroup, leaveGroup, createGroup } from "@/lib/groups"
+import { getUserGroups, requestToJoinGroup, leaveGroup, createGroup } from "@/lib/groups"
 import type { Group } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Dialog,
   DialogContent,
@@ -36,8 +35,6 @@ export function GroupManagement() {
 
   // Form states for creating group
   const [groupName, setGroupName] = useState("")
-  const [groupDescription, setGroupDescription] = useState("")
-  const [maxParticipants, setMaxParticipants] = useState("")
 
   useEffect(() => {
     loadGroups()
@@ -74,18 +71,32 @@ export function GroupManagement() {
 
     setIsJoining(true)
     try {
-      await joinGroup(joinCode.trim(), userProfile.uid, userProfile.displayName || "Usuario")
-      toast({
-        title: "¡Éxito!",
-        description: "Te has unido al grupo correctamente",
-      })
+      const result = await requestToJoinGroup(
+        joinCode.trim(), 
+        userProfile.uid, 
+        userProfile.displayName || userProfile.email?.split('@')[0] || "Usuario",
+        userProfile.email || ""
+      )
+      
+      if (result.requiresApproval) {
+        toast({
+          title: "Solicitud enviada",
+          description: result.message,
+        })
+      } else {
+        toast({
+          title: "¡Éxito!",
+          description: result.message,
+        })
+        loadGroups()
+      }
+      
       setJoinCode("")
       setJoinDialogOpen(false)
-      loadGroups()
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "No se pudo unir al grupo",
+        description: error.message || "No se pudo enviar la solicitud",
         variant: "destructive",
       })
     } finally {
@@ -97,25 +108,33 @@ export function GroupManagement() {
     e.preventDefault()
     if (!userProfile || !groupName.trim()) return
 
+    console.log("Creating group with:", {
+      name: groupName.trim(),
+      adminId: userProfile.uid,
+      adminName: userProfile.displayName || "Usuario"
+    })
+
     setIsCreating(true)
     try {
-      await createGroup(
+      const groupId = await createGroup(
         groupName.trim(),
-        groupDescription.trim(),
+        "", // Descripción vacía
         userProfile.uid,
         userProfile.displayName || "Usuario",
-        maxParticipants ? Number.parseInt(maxParticipants) : undefined,
+        undefined, // Sin máximo de participantes
       )
+      
+      console.log("Group created successfully with ID:", groupId)
+      
       toast({
         title: "¡Grupo creado!",
         description: "Tu grupo ha sido creado exitosamente",
       })
       setGroupName("")
-      setGroupDescription("")
-      setMaxParticipants("")
       setCreateDialogOpen(false)
       loadGroups()
     } catch (error: any) {
+      console.error("Error creating group:", error)
       toast({
         title: "Error",
         description: error.message || "No se pudo crear el grupo",
@@ -211,9 +230,9 @@ export function GroupManagement() {
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle className="text-base sm:text-lg">Crear Nuevo Grupo</DialogTitle>
-                <DialogDescription className="text-sm sm:text-base">Configura tu grupo de pronósticos</DialogDescription>
+                <DialogDescription className="text-sm sm:text-base">Ingresa el nombre de tu grupo</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleCreateGroup} className="space-y-3 sm:space-y-4">
+              <form onSubmit={handleCreateGroup} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="groupName" className="text-sm sm:text-base">Nombre del Grupo</Label>
                   <Input
@@ -222,34 +241,10 @@ export function GroupManagement() {
                     value={groupName}
                     onChange={(e) => setGroupName(e.target.value)}
                     required
-                    className="h-9 sm:h-10"
+                    className="h-10 sm:h-11"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="groupDescription" className="text-sm sm:text-base">Descripción</Label>
-                  <Textarea
-                    id="groupDescription"
-                    placeholder="Describe tu grupo..."
-                    value={groupDescription}
-                    onChange={(e) => setGroupDescription(e.target.value)}
-                    rows={3}
-                    className="text-sm sm:text-base"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="maxParticipants" className="text-sm sm:text-base">Máximo de Participantes (opcional)</Label>
-                  <Input
-                    id="maxParticipants"
-                    type="number"
-                    placeholder="Sin límite"
-                    value={maxParticipants}
-                    onChange={(e) => setMaxParticipants(e.target.value)}
-                    min="2"
-                    max="100"
-                    className="h-9 sm:h-10"
-                  />
-                </div>
-                <Button type="submit" className="w-full h-9 sm:h-10" disabled={isCreating}>
+                <Button type="submit" className="w-full h-10 sm:h-11" disabled={isCreating}>
                   <span className="text-sm sm:text-base">{isCreating ? "Creando..." : "Crear Grupo"}</span>
                 </Button>
               </form>
@@ -278,14 +273,12 @@ export function GroupManagement() {
                       <span className="truncate">{group.name}</span>
                       {group.adminId === userProfile?.uid && <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-primary flex-shrink-0" />}
                     </CardTitle>
-                    <CardDescription className="mt-1 text-xs sm:text-sm">{group.description || "Sin descripción"}</CardDescription>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                   <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span>{group.participants.length} participantes</span>
-                  {group.maxParticipants && <span>/ {group.maxParticipants}</span>}
+                  <span>{group.participants.length - 1} participantes</span>
                 </div>
               </CardHeader>
 

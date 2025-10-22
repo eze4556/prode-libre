@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generador de Iconos PWA</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-preview { display: inline-block; margin: 10px; text-align: center; }
+        canvas { border: 1px solid #ccc; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Iconos PWA para Prode Libre</h1>
+    <p>Sube tu logo y genera todos los tamaños necesarios para la PWA:</p>
+    
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="generateIcons()">Generar Iconos</button>
+    
+    <div id="preview"></div>
+    
+    <script>
+        const sizes = [
+            { size: 72, name: 'icon-72x72.png' },
+            { size: 96, name: 'icon-96x96.png' },
+            { size: 128, name: 'icon-128x128.png' },
+            { size: 144, name: 'icon-144x144.png' },
+            { size: 152, name: 'icon-152x152.png' },
+            { size: 192, name: 'icon-192x192.png' },
+            { size: 384, name: 'icon-384x384.png' },
+            { size: 512, name: 'icon-512x512.png' }
+        ];
+
+        function generateIcons() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Por favor selecciona un archivo');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const preview = document.getElementById('preview');
+                    preview.innerHTML = '';
+                    
+                    sizes.forEach(({ size, name }) => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = size;
+                        canvas.height = size;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Dibujar imagen escalada
+                        ctx.drawImage(img, 0, 0, size, size);
+                        
+                        // Crear elemento de descarga
+                        const link = document.createElement('a');
+                        link.download = name;
+                        link.href = canvas.toDataURL();
+                        link.textContent = `Descargar ${name}`;
+                        link.style.display = 'block';
+                        link.style.margin = '5px';
+                        
+                        const container = document.createElement('div');
+                        container.className = 'icon-preview';
+                        container.appendChild(canvas);
+                        container.appendChild(link);
+                        preview.appendChild(container);
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
